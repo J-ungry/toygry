@@ -1,0 +1,33 @@
+spring:
+  application:
+    name:toygry-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: toygry-api-1
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/**
+          filters:
+            - RewritePath=/api/(?<path>.*), /$\{path}
+        - id: toygry-api-2
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api2/**
+          filters:
+            - RewritePath=/api2/(?<path>.*), /$\{path}
+      default-filters:
+        - name: GlobalFilter
+          args:
+            postLogger: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://keycloak.devyoon.kr/realms/jungryrealm
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+  main:
+    web-application-type: reactive
+server:
+  port: 8080
+

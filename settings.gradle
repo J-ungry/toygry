@@ -1,0 +1,6 @@
+rootProject.name = 'toygry'
+include 'toygry-api-1'
+include 'toygry-api-2'
+include 'toygry-gateway'
+include 'toygry-common'
+
