@@ -1,4 +1,6 @@
 spring:
+  config:
+    import: optional:classpath:ignore/oauth2-resourceserver.yaml
   application:
     name:toygry-gateway
   cloud:
@@ -20,12 +22,6 @@ spring:
         - name: GlobalFilter
           args:
             postLogger: true
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: https://keycloak.devyoon.kr/realms/jungryrealm
-          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
   main:
     web-application-type: reactive
 server:
