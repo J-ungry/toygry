@@ -1,4 +1,4 @@
-package com.example.toygry.Service;
+package com.example.toygry.service;
 
 import com.example.toygry.utils.KeycloakToken;
 import com.example.toygry.utils.TokenUtils;
