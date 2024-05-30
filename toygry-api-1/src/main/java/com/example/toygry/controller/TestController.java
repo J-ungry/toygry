@@ -24,15 +24,4 @@ public class TestController {
         return testService.getToken(token);
     }
 
-    @GetMapping("/test")
-    public String test() {
-        Recommend recommend = Recommend.builder()
-                .build();
-
-        Recommend.Builder builder = new Recommend.Builder();
-        Recommend recommend1 = builder.id(1).content(false).build();
-
-
-        return recommend.toString();
-    }
 }
