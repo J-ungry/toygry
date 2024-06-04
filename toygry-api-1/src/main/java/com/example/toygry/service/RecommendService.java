@@ -63,8 +63,7 @@ public class RecommendService {
     /**
      * 신규 게시글 (Recommend) 추가
      // TODO : keycloak 고쳐지면 userId 추가하기
-     *
-     * @param token 로그인 정보 token 값 (유저정보)
+//     * @param token 로그인 정보 token 값 (유저정보)
      * @param request 추가하고자 하는 정보
      * @return 신규 추가된 값
      */
