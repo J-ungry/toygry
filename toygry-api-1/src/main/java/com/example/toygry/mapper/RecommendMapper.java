@@ -2,11 +2,8 @@ package com.example.toygry.mapper;
 
 import com.example.toygry.dto.RecommendResponse;
 import com.example.toygry.entity.Recommend;
-import org.springframework.stereotype.Component;
 
-@Component
 public class RecommendMapper {
-
     // entity -> dto
     public static RecommendResponse toDto(Recommend recommend) {
         if (recommend == null) {

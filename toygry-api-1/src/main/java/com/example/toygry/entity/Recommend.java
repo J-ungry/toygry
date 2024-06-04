@@ -1,11 +1,16 @@
 package com.example.toygry.entity;
 
+import com.example.toygry.converter.RecommendTypeConverter;
 import jakarta.persistence.*;
+import lombok.Getter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "recommend")
+@Getter
 public class Recommend {
 
     @Id
@@ -20,7 +25,8 @@ public class Recommend {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "recommend_type")
+    @Column(name = "recommend_type", columnDefinition = "recommend_type")
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private RecommendType recommendType;
 
     @Column(name = "title")
@@ -53,17 +59,6 @@ public class Recommend {
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
     }
-
-    // @Getter
-    public String getId() {return id;}
-    public String getUserId() {return userId;}
-    public String getPassword() {return password;}
-    public RecommendType getRecommendType() {return recommendType;}
-    public String getTitle() {return title;}
-    public String getContents() {return contents;}
-    public String getImage() {return image;}
-    public LocalDateTime getCreatedDate() {return createdDate;}
-    public LocalDateTime getModifiedDate() {return modifiedDate;}
 
     // @Builder
     public static class Builder {

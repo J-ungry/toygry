@@ -1,5 +1,6 @@
 package com.example.toygry.controller;
 
+import com.example.toygry.dto.AddRecommendRequest;
 import com.example.toygry.dto.RecommendResponse;
 import com.example.toygry.service.RecommendService;
 import org.springframework.web.bind.annotation.*;
@@ -28,8 +29,10 @@ public class RecommendController {
     }
 
     @PostMapping
-    public String addRecommend() {
-        return null;
+    public RecommendResponse addRecommend(
+//            @RequestHeader("Authorization") String token,
+            @RequestBody AddRecommendRequest request) {
+        return recommendService.addRecommend(request);
     }
 
     @PatchMapping("/{id}")

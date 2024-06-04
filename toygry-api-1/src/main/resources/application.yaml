@@ -9,3 +9,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+  jackson:
+    serialization:
+      WRITE_ENUMS_USING_TO_STRING: true
+    deserialization:
+      READ_ENUMS_USING_TO_STRING: true
