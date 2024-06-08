@@ -1,12 +1,14 @@
 package com.example.toygry.entity;
 
-import com.example.toygry.converter.RecommendTypeConverter;
+import com.example.toygry.dto.AddRecommendRequest;
+import com.example.toygry.dto.UpdateRecommendRequest;
 import jakarta.persistence.*;
 import lombok.Getter;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Entity
 @Table(name = "recommend")
@@ -125,6 +127,14 @@ public class Recommend {
     // .builder() 로 사용하기 위함
     public static Builder builder() {
         return new Builder();
+    }
+
+    public void update(UpdateRecommendRequest request) {
+        this.recommendType = Objects.nonNull(request.getRecommendType()) ? request.getRecommendType() : this.recommendType;
+        this.title = Objects.nonNull(request.getTitle()) ? request.getTitle() : this.title;
+        this.contents = Objects.nonNull(request.getContents()) ? request.getContents() : this.contents;
+        this.image = Objects.nonNull(request.getImage()) ? request.getImage() : this.image;
+        this.modifiedDate = LocalDateTime.now();
     }
 }
 

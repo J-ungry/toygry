@@ -4,7 +4,7 @@ package com.example.toygry.entity;
 public enum RecommendType {
     RESTAURANT,
     PLACE,
-    CLOTH,
+    CLOTHES,
     MUSIC,
     YOUTUBE,
     MOVIE_DRAMA,

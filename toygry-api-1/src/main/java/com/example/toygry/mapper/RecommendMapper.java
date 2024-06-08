@@ -3,10 +3,12 @@ package com.example.toygry.mapper;
 import com.example.toygry.dto.RecommendResponse;
 import com.example.toygry.entity.Recommend;
 
+import java.util.Objects;
+
 public class RecommendMapper {
     // entity -> dto
     public static RecommendResponse toDto(Recommend recommend) {
-        if (recommend == null) {
+        if (Objects.isNull(recommend)) {
             return null;
         }
 
@@ -25,7 +27,7 @@ public class RecommendMapper {
 
     // dto -> entity
     public static Recommend toEntity(RecommendResponse recommendResponse) {
-        if (recommendResponse == null) {
+        if (Objects.isNull(recommendResponse)) {
             return null;
         }
 

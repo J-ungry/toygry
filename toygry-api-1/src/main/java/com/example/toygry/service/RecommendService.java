@@ -1,13 +1,12 @@
 package com.example.toygry.service;
 
 import com.example.toygry.dto.AddRecommendRequest;
+import com.example.toygry.dto.DeleteRecommendRequest;
 import com.example.toygry.dto.RecommendResponse;
+import com.example.toygry.dto.UpdateRecommendRequest;
 import com.example.toygry.entity.Recommend;
-import com.example.toygry.entity.RecommendType;
 import com.example.toygry.mapper.RecommendMapper;
 import com.example.toygry.repository.RecommendRepository;
-import com.example.toygry.utils.KeycloakToken;
-import com.example.toygry.utils.TokenUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -87,5 +86,31 @@ public class RecommendService {
         Recommend result = recommendRepository.save(recommend);
 
         return RecommendMapper.toDto(result);
+    }
+
+    /**
+     * 게시글 update
+     * @param id 게시글 아이디
+     * @return update 정보
+     */
+    public RecommendResponse updateRecommend(String id, UpdateRecommendRequest request) {
+        // TODO 작성자와 동일한 아이디인지 확인 필요
+        Recommend recommend = recommendRepository.findById(id);
+        recommend.update(request);
+        Recommend result = recommendRepository.save(recommend);
+        return RecommendMapper.toDto(result);
+    }
+
+    /**
+     * 게시글 삭제
+     *
+     * @param request 게시글 id, 게시글 password
+     * @return delete 게시글 id
+     */
+    public String deleteRecommend(DeleteRecommendRequest request) {
+        Recommend recommend = recommendRepository.findById(request.getId());
+        recommendRepository.delete(recommend);
+
+        return request.getId();
     }
 }

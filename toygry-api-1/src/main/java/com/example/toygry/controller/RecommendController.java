@@ -1,8 +1,11 @@
 package com.example.toygry.controller;
 
 import com.example.toygry.dto.AddRecommendRequest;
+import com.example.toygry.dto.DeleteRecommendRequest;
 import com.example.toygry.dto.RecommendResponse;
+import com.example.toygry.dto.UpdateRecommendRequest;
 import com.example.toygry.service.RecommendService;
+import org.hibernate.sql.Update;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,12 +39,17 @@ public class RecommendController {
     }
 
     @PatchMapping("/{id}")
-    public String updateRecommend(@PathVariable String id) {
-        return null;
+    public RecommendResponse updateRecommend(
+            // @RequestHeader("Authorization") String token,
+            @PathVariable String id,
+            @RequestBody UpdateRecommendRequest request) {
+        return recommendService.updateRecommend(id, request);
     }
 
-    @DeleteMapping("/{id}")
-    public String deleteRecommend(@PathVariable String id) {
-        return null;
+    @DeleteMapping
+    public String deleteRecommend(
+            // @RequestHeader("Authorization") String token
+            @RequestBody DeleteRecommendRequest request) {
+        return recommendService.deleteRecommend(request);
     }
 }
