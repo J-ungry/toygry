@@ -1,10 +1,13 @@
 package com.example.toygry.service;
 
 import com.example.toygry.dto.AddRecommendRequest;
-import com.example.toygry.dto.DeleteRecommendRequest;
+import com.example.toygry.dto.CheckPasswordRecommendRequest;
 import com.example.toygry.dto.RecommendResponse;
 import com.example.toygry.dto.UpdateRecommendRequest;
 import com.example.toygry.entity.Recommend;
+import com.example.toygry.exception.InvalidPasswordException;
+import com.example.toygry.exception.InvalidUserException;
+import com.example.toygry.exception.RecommendNotFoundException;
 import com.example.toygry.mapper.RecommendMapper;
 import com.example.toygry.repository.RecommendRepository;
 import org.springframework.stereotype.Service;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class RecommendService {
@@ -55,7 +59,8 @@ public class RecommendService {
      * @return id 에 해당하는 게시글
      */
     public RecommendResponse getRecommend(String id) {
-        Recommend recommend = recommendRepository.findById(id);
+        Recommend recommend = recommendRepository.findById(id)
+                .orElseThrow(() -> new RecommendNotFoundException("ERROR: Cannot found id"));
         return RecommendMapper.toDto(recommend);
     }
 
@@ -95,7 +100,8 @@ public class RecommendService {
      */
     public RecommendResponse updateRecommend(String id, UpdateRecommendRequest request) {
         // TODO 작성자와 동일한 아이디인지 확인 필요
-        Recommend recommend = recommendRepository.findById(id);
+        Recommend recommend = recommendRepository.findById(id)
+                .orElseThrow(() -> new RecommendNotFoundException("ERROR: Cannot found id"));
         recommend.update(request);
         Recommend result = recommendRepository.save(recommend);
         return RecommendMapper.toDto(result);
@@ -107,10 +113,42 @@ public class RecommendService {
      * @param request 게시글 id, 게시글 password
      * @return delete 게시글 id
      */
-    public String deleteRecommend(DeleteRecommendRequest request) {
-        Recommend recommend = recommendRepository.findById(request.getId());
+    public String deleteRecommend(CheckPasswordRecommendRequest request) {
+        Recommend recommend = recommendRepository.findById(request.getId())
+                .orElseThrow(() -> new RecommendNotFoundException("ERROR: Cannot found id"));
+        if (!Objects.equals(recommend.getPassword(), request.getPassword())) {
+            throw new InvalidPasswordException("ERROR: Please Check password");
+        }
         recommendRepository.delete(recommend);
 
         return request.getId();
+    }
+
+    /**
+     * 게시글에 대한 user 정보와 password 정보 확인하기
+     *
+     * @param request 게시글 id , password
+     * @return 정상적인 접근 시 true 이외에 exception
+     */
+    public boolean checkInformation(CheckPasswordRecommendRequest request) {
+        Recommend recommend = recommendRepository.findById(request.getId())
+                .orElseThrow(() -> new RecommendNotFoundException("ERROR: Cannot found id"));
+        if (!Objects.equals(recommend.getPassword(), request.getPassword())) {
+            throw new InvalidPasswordException("ERROR: Please Check password");
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * 게시글 정보와 user 정보가 동일한지 확인하는 메소드
+     *
+     * @param recommend 게시글 정보
+     * @param userId user 정보
+     */
+    private void checkUserInfo(Recommend recommend, String userId) {
+        if (!Objects.equals(recommend.getUserId(), userId)) {
+            throw new InvalidUserException("ERROR: Please Check User info");
+        }
     }
 }

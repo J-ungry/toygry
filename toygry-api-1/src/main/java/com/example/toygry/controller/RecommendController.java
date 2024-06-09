@@ -1,11 +1,10 @@
 package com.example.toygry.controller;
 
 import com.example.toygry.dto.AddRecommendRequest;
-import com.example.toygry.dto.DeleteRecommendRequest;
+import com.example.toygry.dto.CheckPasswordRecommendRequest;
 import com.example.toygry.dto.RecommendResponse;
 import com.example.toygry.dto.UpdateRecommendRequest;
 import com.example.toygry.service.RecommendService;
-import org.hibernate.sql.Update;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,10 +45,20 @@ public class RecommendController {
         return recommendService.updateRecommend(id, request);
     }
 
+    // password 확인 로직 필요 없음
     @DeleteMapping
     public String deleteRecommend(
             // @RequestHeader("Authorization") String token
-            @RequestBody DeleteRecommendRequest request) {
+            @RequestBody CheckPasswordRecommendRequest request) {
         return recommendService.deleteRecommend(request);
+    }
+
+    // token 파싱해서 유저정보 검사하는 logic 추가하기
+    @GetMapping
+    public boolean checkInformation(
+            // @RequestHeader("Authorization") String token,
+            @RequestBody CheckPasswordRecommendRequest request
+    ) {
+        return recommendService.checkInformation(request);
     }
 }
