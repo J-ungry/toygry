@@ -5,6 +5,8 @@ import com.example.toygry.dto.CheckPasswordRecommendRequest;
 import com.example.toygry.dto.RecommendResponse;
 import com.example.toygry.dto.UpdateRecommendRequest;
 import com.example.toygry.service.RecommendService;
+import com.example.toygry.utils.KeycloakToken;
+import com.example.toygry.utils.TokenUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,9 +34,9 @@ public class RecommendController {
 
     @PostMapping
     public RecommendResponse addRecommend(
-//            @RequestHeader("Authorization") String token,
+            @RequestHeader("Authorization") String token,
             @RequestBody AddRecommendRequest request) {
-        return recommendService.addRecommend(request);
+        return recommendService.addRecommend(token, request);
     }
 
     @PatchMapping("/{id}")
@@ -45,7 +47,6 @@ public class RecommendController {
         return recommendService.updateRecommend(id, request);
     }
 
-    // password 확인 로직 필요 없음
     @DeleteMapping
     public String deleteRecommend(
             // @RequestHeader("Authorization") String token
@@ -53,12 +54,11 @@ public class RecommendController {
         return recommendService.deleteRecommend(request);
     }
 
-    // token 파싱해서 유저정보 검사하는 logic 추가하기
-    @GetMapping
-    public boolean checkInformation(
-            // @RequestHeader("Authorization") String token,
+    @GetMapping("/check")
+    public RecommendResponse checkInformation(
+            @RequestHeader("Authorization") String token,
             @RequestBody CheckPasswordRecommendRequest request
     ) {
-        return recommendService.checkInformation(request);
+        return recommendService.checkInformation(token, request);
     }
 }

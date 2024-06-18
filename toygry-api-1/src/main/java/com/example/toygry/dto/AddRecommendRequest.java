@@ -7,7 +7,6 @@ import lombok.Getter;
 
 @Getter
 public class AddRecommendRequest {
-    private final String userId;
     private final String password;
     private final RecommendType recommendType;
     private final String title;
@@ -15,8 +14,7 @@ public class AddRecommendRequest {
     private final String image;
 
 //     @AllArgsConstructor
-    private AddRecommendRequest(String userId, String password, RecommendType recommendType, String title, String contents, String image) {
-        this.userId = userId;
+    private AddRecommendRequest(String password, RecommendType recommendType, String title, String contents, String image) {
         this.password = password;
         this.recommendType = recommendType;
         this.title = title;
@@ -26,17 +24,11 @@ public class AddRecommendRequest {
 
     // @Builder
     public static class Builder {
-        private String userId;
         private String password;
         private RecommendType recommendType;
         private String title;
         private String contents;
         private String image;
-
-        public Builder userId(String userId) {
-            this.userId = userId;
-            return this;
-        }
 
         public Builder password(String password) {
             this.password = password;
@@ -59,7 +51,7 @@ public class AddRecommendRequest {
             return this;
         }
         public AddRecommendRequest build() {
-            return new AddRecommendRequest(userId,password, recommendType, title, contents, image);
+            return new AddRecommendRequest(password, recommendType, title, contents, image);
         }
     }
 

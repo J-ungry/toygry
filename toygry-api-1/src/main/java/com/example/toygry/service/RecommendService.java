@@ -10,6 +10,8 @@ import com.example.toygry.exception.InvalidUserException;
 import com.example.toygry.exception.RecommendNotFoundException;
 import com.example.toygry.mapper.RecommendMapper;
 import com.example.toygry.repository.RecommendRepository;
+import com.example.toygry.utils.KeycloakToken;
+import com.example.toygry.utils.TokenUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -66,19 +68,18 @@ public class RecommendService {
 
     /**
      * 신규 게시글 (Recommend) 추가
-     // TODO : keycloak 고쳐지면 userId 추가하기
-//     * @param token 로그인 정보 token 값 (유저정보)
+     *
+     * @param token 로그인 정보 token 값 (유저정보)
      * @param request 추가하고자 하는 정보
      * @return 신규 추가된 값
      */
-    public RecommendResponse addRecommend(AddRecommendRequest request) {
+    public RecommendResponse addRecommend(String token, AddRecommendRequest request) {
         // token parsing
-//        TokenUtils tokenUtils = new TokenUtils();
-//        KeycloakToken keycloakToken = tokenUtils.tokenParser(token);
+        TokenUtils tokenUtils = new TokenUtils();
+        KeycloakToken keycloakToken = tokenUtils.tokenParser(token);
 
         Recommend recommend = Recommend.builder()
-                .userId(request.getUserId())
-//                .userId(keycloakToken.userId())
+                .userId(keycloakToken.userId())
                 .password(request.getPassword())
                 .recommendType(request.getRecommendType())
                 .title(request.getTitle())
@@ -95,11 +96,12 @@ public class RecommendService {
 
     /**
      * 게시글 update
+     *
      * @param id 게시글 아이디
      * @return update 정보
      */
     public RecommendResponse updateRecommend(String id, UpdateRecommendRequest request) {
-        // TODO 작성자와 동일한 아이디인지 확인 필요
+
         Recommend recommend = recommendRepository.findById(id)
                 .orElseThrow(() -> new RecommendNotFoundException("ERROR: Cannot found id"));
         recommend.update(request);
@@ -127,16 +129,26 @@ public class RecommendService {
     /**
      * 게시글에 대한 user 정보와 password 정보 확인하기
      *
+     * @param token 로그인 정보
      * @param request 게시글 id , password
      * @return 정상적인 접근 시 true 이외에 exception
      */
-    public boolean checkInformation(CheckPasswordRecommendRequest request) {
+    public RecommendResponse checkInformation(String token, CheckPasswordRecommendRequest request) {
+        TokenUtils tokenUtils = new TokenUtils();
+        KeycloakToken keycloakToken = tokenUtils.tokenParser(token);
+
         Recommend recommend = recommendRepository.findById(request.getId())
                 .orElseThrow(() -> new RecommendNotFoundException("ERROR: Cannot found id"));
-        if (!Objects.equals(recommend.getPassword(), request.getPassword())) {
+
+        RecommendResponse recommendResponse = RecommendMapper.toDto(recommend);
+
+        if (!Objects.equals(keycloakToken.userId(), recommend.getUserId())) {
+            throw new InvalidUserException("ERROR: Invalid user");
+        }
+        else if (!Objects.equals(recommend.getPassword(), request.getPassword())) {
             throw new InvalidPasswordException("ERROR: Please Check password");
         } else {
-            return true;
+            return recommendResponse;
         }
     }
 
