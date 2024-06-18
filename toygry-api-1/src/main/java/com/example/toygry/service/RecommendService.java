@@ -140,15 +140,13 @@ public class RecommendService {
         Recommend recommend = recommendRepository.findById(request.getId())
                 .orElseThrow(() -> new RecommendNotFoundException("ERROR: Cannot found id"));
 
-        RecommendResponse recommendResponse = RecommendMapper.toDto(recommend);
-
-        if (!Objects.equals(keycloakToken.userId(), recommend.getUserId())) {
-            throw new InvalidUserException("ERROR: Invalid user");
-        }
-        else if (!Objects.equals(recommend.getPassword(), request.getPassword())) {
+        // 게시글 userId, 로그인 userId 동일한지 check
+        checkUserInfo(recommend, keycloakToken.userId());
+        // 게시글 password, 입력받은 password 동일한지 check
+        if (!Objects.equals(recommend.getPassword(), request.getPassword())) {
             throw new InvalidPasswordException("ERROR: Please Check password");
         } else {
-            return recommendResponse;
+            return RecommendMapper.toDto(recommend);
         }
     }
 
