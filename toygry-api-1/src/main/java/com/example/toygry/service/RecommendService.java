@@ -12,6 +12,7 @@ import com.example.toygry.mapper.RecommendMapper;
 import com.example.toygry.repository.RecommendRepository;
 import com.example.toygry.utils.KeycloakToken;
 import com.example.toygry.utils.TokenUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -62,7 +63,7 @@ public class RecommendService {
      */
     public RecommendResponse getRecommend(String id) {
         Recommend recommend = recommendRepository.findById(id)
-                .orElseThrow(() -> new RecommendNotFoundException("ERROR: Cannot found id"));
+                .orElseThrow(() -> new RecommendNotFoundException("ERROR: Cannot found id", HttpStatus.NOT_FOUND));
         return RecommendMapper.toDto(recommend);
     }
 
@@ -103,7 +104,7 @@ public class RecommendService {
     public RecommendResponse updateRecommend(String id, UpdateRecommendRequest request) {
 
         Recommend recommend = recommendRepository.findById(id)
-                .orElseThrow(() -> new RecommendNotFoundException("ERROR: Cannot found id"));
+                .orElseThrow(() -> new RecommendNotFoundException("ERROR: Cannot found id", HttpStatus.NOT_FOUND));
         recommend.update(request);
         Recommend result = recommendRepository.save(recommend);
         return RecommendMapper.toDto(result);
@@ -117,7 +118,7 @@ public class RecommendService {
      */
     public String deleteRecommend(CheckPasswordRecommendRequest request) {
         Recommend recommend = recommendRepository.findById(request.getId())
-                .orElseThrow(() -> new RecommendNotFoundException("ERROR: Cannot found id"));
+                .orElseThrow(() -> new RecommendNotFoundException("ERROR: Cannot found id", HttpStatus.NOT_FOUND));
         if (!Objects.equals(recommend.getPassword(), request.getPassword())) {
             throw new InvalidPasswordException("ERROR: Please Check password");
         }
@@ -138,7 +139,7 @@ public class RecommendService {
         KeycloakToken keycloakToken = tokenUtils.tokenParser(token);
 
         Recommend recommend = recommendRepository.findById(request.getId())
-                .orElseThrow(() -> new RecommendNotFoundException("ERROR: Cannot found id"));
+                .orElseThrow(() -> new RecommendNotFoundException("ERROR: Cannot found id", HttpStatus.NOT_FOUND));
 
         // 게시글 userId, 로그인 userId 동일한지 check
         checkUserInfo(recommend, keycloakToken.userId());

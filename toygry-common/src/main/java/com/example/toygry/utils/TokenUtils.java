@@ -21,6 +21,7 @@ public class TokenUtils {
         Map<String, Object> tokenMap = jsonParser.parseMap(payload);
 
         return new KeycloakToken(
+                tokenMap.get("sub").toString(),
                 tokenMap.get("name").toString(),
                 tokenMap.get("preferred_username").toString(),
                 tokenMap.get("email").toString());
